@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
-	"runtime"
 	"syscall"
 
 	rsLib "github.com/Rohansjamadagni/lmt/resourceLib"

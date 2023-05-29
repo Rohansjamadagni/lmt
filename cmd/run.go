@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"runtime"
 	"syscall"
 
 	rsLib "github.com/Rohansjamadagni/lmt/resourceLib"
@@ -48,6 +49,7 @@ func init() {
 	rootCmd.AddCommand(runCmd)
 	runCmd.PersistentFlags().Float64VarP(&MemLimit, "mem-limit", "m", 0, "Set memory limit in MB")
 	runCmd.PersistentFlags().Int8VarP(&CpuLimit, "cpu-limit", "c", 100, "Percentage of cpu to limit the process to")
+	runCmd.PersistentFlags().Int8VarP(&NumCores, "num-cores", "n", int8(runtime.NumCPU()), "Number of cores to allow the process to use")
 	runCmd.Flags().SetInterspersed(false)
 }
 

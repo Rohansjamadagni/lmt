@@ -15,7 +15,6 @@ import (
 
 	rsLib "github.com/Rohansjamadagni/lmt/resourceLib"
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 )
 
 var (
@@ -58,20 +57,13 @@ func RunCommandWithResources(res rsLib.Resources, args []string) error {
 	if err != nil {
 		return fmt.Errorf("Error: %w", err)
 	}
-	// Convert terminal to raw
-	fd := int(os.Stdin.Fd())
-	oldState, err := term.MakeRaw(fd)
-	if err != nil {
-		panic(err)
-	}
-	defer term.Restore(fd, oldState)
 
 	cmdName := args[0]
 	cmdArgs := args[1:]
 	cmd := exec.Command(cmdName, cmdArgs...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stderr
+	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err != nil {
 		fmt.Println("Error running command")
@@ -85,7 +77,7 @@ func RunCommandWithResources(res rsLib.Resources, args []string) error {
 	}
 	// Handle exits
 	sigChan := make(chan os.Signal)
-	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+  signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL)
 	go rsMgr.HandleUnexpectedExits(cmd, sigChan)
 	cmd.Wait()
 	return nil

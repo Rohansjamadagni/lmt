@@ -18,9 +18,6 @@ var rootCmd = &cobra.Command{
 	Use: "lmt",
 	Long: `Run any program with cpu and ram limits.
 lmt uses cgroupsv2 to enforce resource limits and can be used on any linux system`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -35,9 +32,8 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+  // TODO:
+	// - Parse config for defined applications and enforce limits
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.lmt.yaml)")
 

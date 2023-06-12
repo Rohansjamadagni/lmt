@@ -17,10 +17,13 @@ var psCmd = &cobra.Command{
 	},
 }
 
+var watch bool
+
 func init() {
 	rootCmd.AddCommand(psCmd)
+	psCmd.PersistentFlags().BoolVarP(&watch, "watch", "w", false, "watch command output")
 }
 
 func ListProcesses() {
-	rsLib.PrintPrograms()
+	rsLib.PrintPrograms(watch)
 }

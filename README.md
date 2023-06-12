@@ -28,6 +28,8 @@ go get .
 go build
 ```
 # Usage
+
+## Run
 ```
 Usage:
   lmt run [flags] <program>
@@ -37,6 +39,16 @@ Flags:
   -h, --help              help for run
   -m, --mem-limit float   Set memory limit in MB (default 0 [no limit])
   -n, --num-cores int8    Number of cores to allow the process to use (default [nproc])
+```
+
+## PS
+``` 
+Usage:
+  lmt ps [flags]
+
+Flags:
+  -h, --help    help for ps
+  -w, --watch   watch command output
 ```
 
 # Examples
@@ -53,4 +65,5 @@ Gives a live view of the resources used by programs run with lmt.
 
 ```
 lmt ps
+lmt ps -w
 ```

@@ -152,7 +152,7 @@ func CreateManager(res *Resources) (*RsLibHandler, error) {
 
 }
 
-func PrintPrograms() {
+func PrintPrograms(watch bool) {
 	root := "/sys/fs/cgroup"
 
 	for {
@@ -163,7 +163,6 @@ func PrintPrograms() {
     }
     colWidth := width / 7
 		// Print the header
-		fmt.Print("\033[H\033[2J")
 		headerFormat := fmt.Sprintf("%%-%ds", colWidth)
 		fmt.Printf(headerFormat, "MAIN PID")
 		fmt.Printf(headerFormat, "CPU USAGE(%)")
@@ -183,7 +182,11 @@ func PrintPrograms() {
       fmt.Println("Unable to access cgroup directory")
 			fmt.Println(err)
 		}
+    if !watch {
+      break
+    }
 		time.Sleep(2 * time.Second)
+		fmt.Print("\033[H\033[2J")
 	}
 }
 

@@ -22,10 +22,9 @@ mount | grep -q 'cgroup2' && echo "cgroupsv2 hierarchy is mounted" || echo "cgro
 ```
 
 # Installation
-clone the repo and run:
+Make sure go is installed
 ```
-go get .
-go build
+go install "github.com/Rohansjamadagni/lmt@latest"
 ```
 # Usage
 

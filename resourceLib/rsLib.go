@@ -42,6 +42,7 @@ type Resources struct {
 	MaxMem   float64
 	CpuLimit int8
 	NumCores int8
+  Rootless bool
 }
 
 func (cm Cgroups2ManagerRoot) Delete() {
@@ -65,6 +66,14 @@ func getResourcesRootless(res *Resources) (*configs.Resources, error) {
 	}, nil
 }
 
+func IsRootless() bool {
+  uid := os.Getuid()
+  if uid == 0 {
+    return false
+  }
+  return true
+}
+
 func getResourcesRoot(res *Resources) (*cgroup2.Resources, error) {
 
 	var (
@@ -85,16 +94,18 @@ func getResourcesRoot(res *Resources) (*cgroup2.Resources, error) {
 	}, nil
 }
 
+
 // Return appropriate manager depending on uid of caller
 func CreateManager(res *Resources) (*RsLibHandler, error) {
 	rsLib := &RsLibHandler{}
 	pid := os.Getpid()
 	// If it is in rootless mode retunrn cgroupsmanager
-	if uid := os.Getuid(); uid != 0 {
+	if res.Rootless {
 		groupName := fmt.Sprintf("lmt-%d", os.Getpid())
+    uid := os.Getuid()
 		cg := &configs.Cgroup{
 			Name:     groupName,
-			Rootless: true,
+			Rootless: res.Rootless,
 			OwnerUID: &uid,
 			Systemd:  true,
 		}
@@ -145,7 +156,7 @@ func CreateManager(res *Resources) (*RsLibHandler, error) {
 	}
 	rsLib = &RsLibHandler{
 		Mgr:      rootMgr,
-		Rootless: false,
+		Rootless: res.Rootless,
 	}
 
 	return rsLib, nil

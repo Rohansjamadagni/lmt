@@ -21,6 +21,7 @@ var (
 	MemLimit float64
 	CpuLimit int8
 	NumCores int8
+  Rootless bool
 )
 
 // runCmd represents the run command
@@ -36,6 +37,7 @@ var runCmd = &cobra.Command{
 			MaxMem:   MemLimit,
 			CpuLimit: CpuLimit,
 			NumCores: NumCores,
+      Rootless: Rootless,
 		}
 		err := RunCommandWithResources(res, args)
 		if err != nil {
@@ -49,6 +51,7 @@ func init() {
 	runCmd.PersistentFlags().Float64VarP(&MemLimit, "mem-limit", "m", 0, "Set memory limit in MB")
 	runCmd.PersistentFlags().Int8VarP(&CpuLimit, "cpu-limit", "c", 100, "Percentage of cpu to limit the process to")
 	runCmd.PersistentFlags().Int8VarP(&NumCores, "num-cores", "n", int8(runtime.NumCPU()), "Number of cores to allow the process to use")
+  runCmd.PersistentFlags().BoolVarP(&Rootless, "rootless", "r", rsLib.IsRootless(), "Manually set rootless might be needed inside a container")
 	runCmd.Flags().SetInterspersed(false)
 }
 

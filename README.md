@@ -58,6 +58,8 @@ lmt run -m 500 firefox
 ```
 Note: Interactive TUI apps are a bit tricky to handle, so as a workaround launch a tmux session (or even a new terminal session) with the desired limits and run applications from there.
 
+It also can't be used inside containers in root or rootless mode because I'm using some systemd libraries to create and manage cgroups. However, I'm working on writing my own cgroup manager that would work inside containers and non-systemd distros.
+
 ## PS command
 
 Gives a live view of the resources used by programs run with lmt.

@@ -94,6 +94,26 @@ func getResourcesRoot(res *Resources) (*cgroup2.Resources, error) {
 	}, nil
 }
 
+func ModifyCgroup(path string, res *Resources) (error) {
+
+  mgr, err := cgroup2.Load(path)
+  if err != nil {
+    return fmt.Errorf("Unable to load cgroup: %v", err)
+  }
+
+  rootRes, err := getResourcesRoot(res)
+  if err != nil {
+    return fmt.Errorf("Unable to load cgroup: %v", err)
+  }
+
+  err = mgr.Update(rootRes)
+  if err != nil {
+    return fmt.Errorf("Unable to load cgroup: %v", err)
+  }
+
+  return nil
+}
+
 
 // Return appropriate manager depending on uid of caller
 func CreateManager(res *Resources) (*RsLibHandler, error) {

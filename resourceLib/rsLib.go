@@ -83,7 +83,18 @@ func getResourcesRoot(res *Resources) (*cgroup2.Resources, error) {
 		memMax int64  = int64(res.MaxMem * 1024 * 1024)
 	)
 
-	return &cgroup2.Resources{
+  if (memMax == 0) {
+
+    return &cgroup2.Resources{
+      CPU: &cgroup2.CPU{
+        Weight: &weight,
+        Max:    cgroup2.NewCPUMax(&quota, &period),
+      },
+    }, nil
+
+  }
+
+  return &cgroup2.Resources{
 		CPU: &cgroup2.CPU{
 			Weight: &weight,
 			Max:    cgroup2.NewCPUMax(&quota, &period),
@@ -92,6 +103,7 @@ func getResourcesRoot(res *Resources) (*cgroup2.Resources, error) {
 			High: &memMax,
 		},
 	}, nil
+
 }
 
 func ModifyCgroup(path string, res *Resources) (error) {

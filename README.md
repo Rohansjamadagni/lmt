@@ -21,6 +21,9 @@ You can check if its enabled and mounted using the following command:
 mount | grep -q 'cgroup2' && echo "cgroupsv2 hierarchy is mounted" || echo "cgroupsv2 hierarchy is NOT mounted"
 ```
 
+# Demo
+![](https://raw.githubusercontent.com/Rohansjamadagni/lmt/main/lmt-demo-fast.gif)
+
 # Installation
 Make sure go is installed and $HOME/go/bin is in your path, then run
 ```
@@ -50,6 +53,29 @@ Flags:
   -w, --watch   watch command output
 ```
 
+## Set (Experimental)
+```
+Change the cgroup resource limits of a container
+
+Usage:
+  lmt set ctr id [flags]
+
+Flags:
+  -c, --cpu-limit int8    Percentage of cpu to limit the process to (default 100)
+  -h, --help              help for ctr
+  -m, --mem-limit float   Set memory limit in MB
+  -n, --num-cores int8    Number of cores to allow the process to use (default 16)
+  -p, --podman            Use with podman containers (default false)
+  -r, --rootless          Manually set rootless might be needed inside a container (default true)
+```
+
+Tries to change the limits of an existing container with the desired limits. It may fail if you set the limits too low since it may conflict with what podman/docker sets as a minimum. The id is the container's partial/full hash, which is seen in the id field when you run "docker ps or podman ps". 
+
+Note:
+- For docker containers command must be run as root.
+- The container must be running for the command to work.
+- To unset limits just run set without any flags -  `lmt set ctr id` - for docker and `lmt set ctr -p id` for podman 
+
 # Examples
 
 ## Run command
@@ -59,6 +85,12 @@ lmt run -m 500 firefox
 Note: Interactive TUI apps are a bit tricky to handle, so as a workaround launch a tmux session (or even a new terminal session) with the desired limits and run applications from there.
 
 It also can't be used inside containers in root or rootless mode because I'm using some systemd libraries to create and manage cgroups. However, I'm working on writing my own cgroup manager that would work inside containers and non-systemd distros.
+
+## Set command
+
+```
+lmt set ctr -m 100 7f
+```
 
 ## PS command
 

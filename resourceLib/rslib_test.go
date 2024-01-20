@@ -46,7 +46,7 @@ func TestGetResourcesRoot(t *testing.T) {
 
     var (
       weight uint64 = 100
-      cpuQuota int64 = 4
+      cpuQuota int64 = 4000
       cpuPeriod uint64 = 100000
       memory int64 = 1073741824
 

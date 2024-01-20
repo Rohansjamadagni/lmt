@@ -79,7 +79,7 @@ func getResourcesRoot(res *Resources) (*cgroup2.Resources, error) {
 	var (
 		period uint64 = 100000
 		weight uint64 = 100
-		quota  int64  = int64(res.NumCores) * int64(res.CpuLimit)
+		quota  int64  = int64(res.NumCores) * int64(res.CpuLimit) * 1000
 		memMax int64  = int64(res.MaxMem * 1024 * 1024)
 	)
 
@@ -147,6 +147,11 @@ func CreateManager(res *Resources) (*RsLibHandler, error) {
 
 	groupPath := fmt.Sprintf("lmt-%d.scope", pid)
 	mgr, err := cgroup2.NewSystemd("", groupPath, pid, resConfig)
+	if err != nil {
+		return rsLib, fmt.Errorf("failed to create a systemd scope: %v", err)
+	}
+
+  err = mgr.Update(resConfig)
 	if err != nil {
 		return rsLib, fmt.Errorf("failed to create a systemd scope: %v", err)
 	}

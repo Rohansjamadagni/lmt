@@ -31,7 +31,7 @@ var runCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			cmd.Help()
-			os.Exit(0)
+			os.Exit(1)
 		}
 		res := rsLib.Resources{
 			MaxMem:   MemLimit,
@@ -65,6 +65,8 @@ func RunCommandWithResources(res rsLib.Resources, args []string) error {
 	cmdArgs := args[1:]
 	cmd := exec.Command(cmdName, cmdArgs...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+
+	// Copy the input and output between the terminal window and the command.
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -73,7 +75,6 @@ func RunCommandWithResources(res rsLib.Resources, args []string) error {
 		panic(err)
 	}
 
-	// Copy the input and output between the terminal window and the command.
 	err = cmd.Start()
 	if err != nil {
 		fmt.Printf("Error: %v", err)
